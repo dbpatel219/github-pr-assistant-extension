@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+
+  "name": "Github PR Assistant",
+  "version": "0.1.1",
+  "description": "Github PR Assistant that handles adding warnings for no tests.",
+
+  "content_scripts": [{
+    "css": ["styles.css"],
+    "js": ["content.js"],
+    "matches": ["https://github.com/*/pull/*"]
+  }]
+
+}
