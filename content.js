@@ -1,23 +1,37 @@
 console.log("PR assistant loaded...")
 
-checkForTests();
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if( request.message === "pr_assist" ) {
+      checkForTests();
+    }
+  }
+);
 
 function checkForTests() {
 	console.log("Checking for tests....Hang tight!");
 	var githubFloatingDiv = $x("//*[@id=\"files_bucket\"]/div[4]/div/div[2]")[0];
+	var containerElement = $x("//*[@id=\"files_bucket\"]")[0];
 
-	if (githubFloatingDiv && ! hasTestFile()) {
-		var warningDivElement = document.createElement("div");
-		warningDivElement.className = "diffbar-item";
+	var warningDivElement = document.createElement("div");
+	warningDivElement.setAttribute("id", "prAssistDiv");
+	warningDivElement.className = "diffbar-item";
 
-		var warningSpanElement = document.createElement("span");
+	var warningSpanElement = document.createElement("span");
+	if (githubFloatingDiv && ! hasTestFile() && ! prAssistDivExists()) {
 		warningSpanElement.className = "text-red";
 		warningSpanElement.textContent = "No Test Warning!";
-
-		warningDivElement.appendChild(warningSpanElement);
-
-		githubFloatingDiv.parentNode.insertBefore(warningDivElement, githubFloatingDiv.nextSibling);
+	} else {
+		warningSpanElement.className = "text-green";
+		warningSpanElement.textContent = "Tests...Check!";
 	}
+
+	warningDivElement.appendChild(warningSpanElement);
+	githubFloatingDiv.parentNode.insertBefore(warningDivElement, githubFloatingDiv.nextSibling);
+}
+
+function prAssistDivExists() {
+	return $x("//*[@id=\"prAssistDiv\"]").length > 0;
 }
 
 function hasTestFile() {
