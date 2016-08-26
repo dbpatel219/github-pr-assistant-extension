@@ -1,12 +1,16 @@
 console.log("PR assistant loaded...")
 
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if( request.message === "pr_assist" ) {
-      checkForTests();
-    }
-  }
-);
+window.onload = function() {
+    chrome.runtime.onMessage.addListener(
+	  function(request, sender, sendResponse) {
+	    if( request.message === "pr_assist" ) {
+	    	if (! prAssistDivExists()) {
+	      		checkForTests();
+	  		}
+	    }
+	  }
+	);
+};
 
 function checkForTests() {
 	console.log("Checking for tests....Hang tight!");
@@ -18,7 +22,7 @@ function checkForTests() {
 	warningDivElement.className = "diffbar-item";
 
 	var warningSpanElement = document.createElement("span");
-	if (githubFloatingDiv && ! hasTestFile() && ! prAssistDivExists()) {
+	if (githubFloatingDiv && ! hasTestFile()) {
 		warningSpanElement.className = "text-red";
 		warningSpanElement.textContent = "No Test Warning!";
 	} else {
@@ -27,7 +31,9 @@ function checkForTests() {
 	}
 
 	warningDivElement.appendChild(warningSpanElement);
-	githubFloatingDiv.parentNode.insertBefore(warningDivElement, githubFloatingDiv.nextSibling);
+	if (typeof githubFloatingDiv != 'undefined' && githubFloatingDiv.parentNode !== null) {
+		githubFloatingDiv.parentNode.insertBefore(warningDivElement, githubFloatingDiv.nextSibling);
+	}
 }
 
 function prAssistDivExists() {
