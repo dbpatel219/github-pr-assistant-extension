@@ -1,16 +1,14 @@
 console.log("PR assistant loaded...")
 
-window.onload = function() {
-    chrome.runtime.onMessage.addListener(
-	  function(request, sender, sendResponse) {
-	    if( request.message === "pr_assist" ) {
-	    	if (! prAssistDivExists()) {
-	      		checkForTests();
-	  		}
-	    }
-	  }
-	);
-};
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if( request.message === "pr_assist" ) {
+    	if (! prAssistDivExists()) {
+      		checkForTests();
+  		}
+    }
+  }
+);
 
 function checkForTests() {
 	console.log("Checking for tests....Hang tight!");
